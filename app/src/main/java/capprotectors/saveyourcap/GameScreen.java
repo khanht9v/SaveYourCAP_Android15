@@ -3,6 +3,7 @@ package capprotectors.saveyourcap;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import capprotectors.framework.Game;
@@ -20,8 +21,9 @@ public class GameScreen extends Screen {
     // Variable Setup
     // You would create game objects here.
 
+    private static Background bg1, bg2;
     private static Student student;
-    public static List<Professor> professors;
+    public static ArrayList<Professor> professors = new ArrayList<>();
 
     int lives = 3;
     private float spawnChance = (float) 0.02;
@@ -35,6 +37,11 @@ public class GameScreen extends Screen {
         super(game);
 
         // Initialize game objects here
+        bg1 = new Background(0, 0);
+        bg2 = new Background(2160, 0);
+        bg1.setSpeedX(-3);
+        bg2.setSpeedX(-3);
+
         student = new Student(lives, Assets.student.getWidth(), Assets.student.getHeight(), 100, screenHeight/2);
         // Defining a paint object
         paint = new Paint();
@@ -77,7 +84,7 @@ public class GameScreen extends Screen {
         // Now the updateRunning() method will be called!
 
         if (touchEvents.size() > 0) {
-            Assets.click.play(.85f);
+            Assets.click.play(1f);
             state = GameState.Running;
         }
     }
@@ -123,16 +130,22 @@ public class GameScreen extends Screen {
         // 3. Call individual update() methods here.
         // This is where all the game updates happen.
         student.update();
+
         if (Math.random()<spawnChance)
             professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(), screenWidth+Assets.professor.getWidth()/2, (int) Math.floor((Math.random()*3+1))*screenHeight/4, -3));
-        for (Professor professor : professors) {
+
+        for (int i = professors.size()-1; i>=0; i--) {
+            Professor professor = professors.get(i);
             if (professor.isDead()) {
-                professors.remove(professor);
+                professors.remove(i);
             }
             else {
                 professor.update();
             }
         }
+
+        bg1.update();
+        bg2.update();
     }
 
     private boolean inBounds(TouchEvent event, int x, int y, int width, int height) {
@@ -185,6 +198,9 @@ public class GameScreen extends Screen {
         // Example:
         // g.drawImage(Assets.background, 0, 0);
         // g.drawImage(Assets.character, characterX, characterY);
+        g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
+        g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
+
         g.drawImage(Assets.student, student.getX()-student.getWidth()/2, student.getY()-student.getHeight()/2);
         for (Professor professor : professors)
             g.drawImage(Assets.professor, professor.getX(), professor.getY());
@@ -205,6 +221,8 @@ public class GameScreen extends Screen {
         // Set all variables to null. You will be recreating them in the
         // constructor.
         paint = null;
+        bg1 = null;
+        bg2 = null;
         student = null;
         professors = null;
         // Call garbage collector to clean up memory.
@@ -214,7 +232,7 @@ public class GameScreen extends Screen {
     private void drawReadyUI() {
         Graphics g = game.getGraphics();
 
-        g.drawARGB(155, 0, 0, 0);
+        g.drawARGB(155, 255, 255, 255);
         g.drawString("Tap to move to another lane.",
                 640, 300, paint);
 
@@ -265,6 +283,14 @@ public class GameScreen extends Screen {
 
     private void goToMenu() {
         game.setScreen(new MainMenuScreen(game));
+    }
+
+    public static Background getBg1() {
+        return bg1;
+    }
+
+    public static Background getBg2() {
+        return bg2;
     }
 
     public static Student getStudent() {

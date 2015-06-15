@@ -14,16 +14,15 @@ public class MainMenuScreen extends Screen {
 
     @Override
     public void update(float deltaTime) {
+        Graphics g = game.getGraphics();
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
-        int len = touchEvents.size();
-        for (int i = 0; i < len; i++) {
-            TouchEvent event = touchEvents.get(i);
+        for (TouchEvent event: touchEvents) {
             if (event.type == TouchEvent.TOUCH_UP) {
 
-                if (inBounds(event, 0, 0, 250, 250)) {
+                if (inBounds(event, 0, g.getHeight()-150, 250, g.getHeight())) {
                     //START GAME
-                    Assets.click.play(.85f);
+                    Assets.click.play(1f);
                     game.setScreen(new GameScreen(game));
                 }
 
@@ -40,7 +39,7 @@ public class MainMenuScreen extends Screen {
     @Override
     public void paint(float deltaTime) {
         Graphics g = game.getGraphics();
-        g.drawImage(Assets.menu, 0, 0);
+        g.drawScaledImage(Assets.menu, 0, 0, g.getWidth(), g.getHeight(), 0, 0, Assets.menu.getWidth(), Assets.menu.getHeight());
     }
 
     @Override
