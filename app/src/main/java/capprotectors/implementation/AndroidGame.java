@@ -17,7 +17,7 @@ import capprotectors.framework.Graphics;
 import capprotectors.framework.Input;
 import capprotectors.framework.Screen;
 
-public abstract class mainGame extends Activity implements Game {
+public abstract class AndroidGame extends Activity implements Game {
     private AndroidFastRenderView renderView;
     private Graphics graphics;
     private Audio audio;
