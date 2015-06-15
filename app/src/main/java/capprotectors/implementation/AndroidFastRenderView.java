@@ -8,13 +8,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class AndroidFastRenderView extends SurfaceView implements Runnable {
-    private mainGame game;
+    private AndroidGame game;
     private Bitmap framebuffer;
     private Thread renderThread = null;
     private SurfaceHolder holder;
     private volatile boolean running = false;
 
-    public AndroidFastRenderView(mainGame game, Bitmap frameBuffer) {
+    public AndroidFastRenderView(AndroidGame game, Bitmap frameBuffer) {
         super(game);
         this.game = game;
         this.framebuffer = frameBuffer;

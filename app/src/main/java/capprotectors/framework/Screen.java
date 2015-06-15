@@ -1,7 +1,7 @@
 package capprotectors.framework;
 
 public abstract class Screen {
-    private final Game game;
+    protected final Game game;
 
     public Screen(Game game) {
         this.game = game;
