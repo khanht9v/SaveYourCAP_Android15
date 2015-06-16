@@ -35,14 +35,13 @@ public class Student {
             }
         }
 
-        /*if ((studentSpeed > 0 && studentY+studentSpeed > studentDestY) || (studentSpeed < 0 && studentY+studentSpeed < studentDestY)) {
+        if (Math.abs(studentDestY-studentY)<2*inertia && studentSpeed > 0 && (studentY+studentSpeed > studentDestY) || (studentSpeed < 0 && studentY+studentSpeed < studentDestY)) {
             studentSpeed = 0;
             studentY = studentDestY;
         }
         else {
-            studentSpeed = 0;
             studentY += studentSpeed;
-        }*/
+        }
 
         boundingBox.set(studentX-studentWidth/2, studentY-studentHeight/2, studentX+studentWidth/2, studentY+studentHeight/2);
     }
