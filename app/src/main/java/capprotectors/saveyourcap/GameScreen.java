@@ -158,15 +158,13 @@ public class GameScreen extends Screen {
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
-                if (inBounds(event, 0, 0, 800, 240)) {
-                    Assets.click.play(.85f);
-                    if (!inBounds(event, 0, 0, 35, 35)) {
-                        resume();
-                    }
+                if (inBounds(event, screenWidth/4, screenHeight/4, screenWidth/2, screenHeight/4)) {
+                    Assets.click.play(1f);
+                    resume();
                 }
 
-                if (inBounds(event, 0, 240, 800, 240)) {
-                    Assets.click.play(.85f);
+                if (inBounds(event, screenWidth/4, screenHeight/2, screenWidth/2, screenHeight/4)) {
+                    Assets.click.play(1f);
                     nullify();
                     goToMenu();
                 }
@@ -246,10 +244,10 @@ public class GameScreen extends Screen {
 
     private void drawPausedUI() {
         Graphics g = game.getGraphics();
-        // Darken the entire screen so you can display the Paused screen.
+        // Fill transparently the entire screen so you can display the Paused screen.
         g.drawARGB(155, 0, 0, 0);
-        g.drawString("Resume", 400, 165, paint2);
-        g.drawString("Menu", 400, 360, paint2);
+        g.drawString("Resume", screenWidth/2, screenHeight*3/8, paint2);
+        g.drawString("Menu",   screenWidth/2, screenHeight*5/8, paint2);
     }
 
     private void drawGameOverUI() {
