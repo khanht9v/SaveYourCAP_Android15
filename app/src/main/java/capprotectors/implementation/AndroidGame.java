@@ -1,11 +1,9 @@
 package capprotectors.implementation;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;

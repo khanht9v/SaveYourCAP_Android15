@@ -1,11 +1,15 @@
 package capprotectors.saveyourcap;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
 import java.util.List;
 
 import capprotectors.framework.Game;
 import capprotectors.framework.Graphics;
 import capprotectors.framework.Input.TouchEvent;
 import capprotectors.framework.Screen;
+import capprotectors.implementation.AndroidGame;
 
 public class MainMenuScreen extends Screen {
     public MainMenuScreen(Game game) {
@@ -59,5 +63,24 @@ public class MainMenuScreen extends Screen {
     @Override
     public void backButton() {
         //Display "Exit Game?" Box
+        AlertDialog.Builder builder = new AlertDialog.Builder((AndroidGame) this.game);
+        builder.setCancelable(false);
+        builder.setMessage("Do you want to Exit?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //if user pressed "yes", then he is allowed to exit from application
+                ((AndroidGame) MainMenuScreen.this.game).finish();
+            }
+        });
+        builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //if user select "No", just cancel this dialog and continue with app
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert=builder.create();
+        alert.show();
     }
 }

@@ -4,7 +4,7 @@ import android.graphics.Rect;
 
 public class Student {
 
-    final float inertia = (float) 1;
+    final float inertia = (float) 3;
 
     private int lives;
     private int studentWidth;

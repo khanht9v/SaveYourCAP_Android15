@@ -26,7 +26,8 @@ public class GameScreen extends Screen {
     public static ArrayList<Professor> professors = new ArrayList<>();
 
     int lives = 3;
-    private float spawnChance = (float) 0.02;
+    private float spawnChance = 0.02f;
+    private int scrollSpeed = -9;
 
     Graphics g = game.getGraphics();
     public int screenWidth = g.getWidth();
@@ -39,8 +40,8 @@ public class GameScreen extends Screen {
         // Initialize game objects here
         bg1 = new Background(0, 0);
         bg2 = new Background(2160, 0);
-        bg1.setSpeedX(-3);
-        bg2.setSpeedX(-3);
+        bg1.setSpeedX(scrollSpeed);
+        bg2.setSpeedX(scrollSpeed);
 
         student = new Student(lives, Assets.student.getWidth(), Assets.student.getHeight(), 100, screenHeight/2);
         // Defining a paint object
@@ -132,7 +133,7 @@ public class GameScreen extends Screen {
         student.update();
 
         if (Math.random()<spawnChance)
-            professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(), screenWidth+Assets.professor.getWidth()/2, (int) Math.floor((Math.random()*3+1))*screenHeight/4, -3));
+            professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(), screenWidth+Assets.professor.getWidth()/2, (int) Math.floor((Math.random()*3+1))*screenHeight/4, scrollSpeed));
 
         for (int i = professors.size()-1; i>=0; i--) {
             Professor professor = professors.get(i);
