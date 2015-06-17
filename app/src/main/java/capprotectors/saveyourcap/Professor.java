@@ -3,7 +3,6 @@ package capprotectors.saveyourcap;
 import android.graphics.Rect;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class Professor {
     public static ArrayList<String> grades = new ArrayList<>();
@@ -36,7 +35,9 @@ public class Professor {
         professorX += professorSpeed;
         r.set(professorX-professorWidth/2, professorY-professorHeight/2, professorX+professorWidth/2, professorY+professorHeight/2);
         if (r.intersect(Student.boundingBox)){
-            // interactWithStudent();
+            if (this.grade == "F") //TODO move condition to raw
+                GameScreen.getStudent().lostALife();
+            GameScreen.addScore(this.getScore());
             die();
         } else if (r.intersect(0, 0, 0, 800)) { // TODO: replace 800 with screenHeight
             die();

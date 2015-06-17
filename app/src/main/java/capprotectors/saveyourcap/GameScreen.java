@@ -28,15 +28,17 @@ public class GameScreen extends Screen {
     public static ArrayList<Professor> professors = new ArrayList<>();
 
     int lives = 3;
+
+    private static int score = 0;
+
     private float spawnChance = 0.02f;
     private int scrollSpeed = -9;
-
     Graphics g = game.getGraphics();
+
     public int screenWidth = g.getWidth();
     public int screenHeight = g.getHeight();
     Paint paint, paint2;
     Random random = new Random();
-
     public GameScreen(Game game) {
         super(game);
 
@@ -49,7 +51,7 @@ public class GameScreen extends Screen {
         student = new Student(lives, Assets.student.getWidth(), Assets.student.getHeight(), 100, screenHeight/2);
 
         loadRaw();
-        
+
         // Defining a paint object
         paint = new Paint();
         paint.setTextSize(30);
@@ -115,7 +117,7 @@ public class GameScreen extends Screen {
             TouchEvent event = touchEvents.get(i);
 
             if (event.type == TouchEvent.TOUCH_UP) {
-                
+
                 if (event.x > screenWidth-100 && event.y < 100) {
                     pause();
                 }
@@ -126,7 +128,7 @@ public class GameScreen extends Screen {
                 else if (event.y > screenHeight/2) {
                     student.moveTo(screenHeight / 2);
                 }
-                
+
                 else if (event.y > screenHeight/4){
                     student.moveTo(screenHeight/4);
                 }
@@ -222,8 +224,16 @@ public class GameScreen extends Screen {
         g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
 
         g.drawImage(Assets.student, student.getX()-student.getWidth()/2, student.getY()-student.getHeight()/2);
-        for (Professor professor : professors)
+        for (Professor professor : professors) {
             g.drawImage(Assets.professor, professor.getX(), professor.getY());
+            g.drawString(professor.getGrade(), professor.getX(), professor.getY(), paint);
+        }
+
+        String hearts = "";
+        for (int i=0; i<student.getLives(); i++) hearts+="?";
+        g.drawString(hearts, 100, 100, paint);
+        g.drawString(score+"", screenWidth - 200, 100, paint);
+
         // Secondly, draw the UI above the game elements.
         if (state == GameState.Ready)
             drawReadyUI();
@@ -315,5 +325,9 @@ public class GameScreen extends Screen {
 
     public static Student getStudent() {
         return student;
+    }
+
+    public static void addScore(int dScore) {
+        score += dScore;
     }
 }
