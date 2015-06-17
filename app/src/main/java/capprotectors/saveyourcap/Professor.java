@@ -9,6 +9,12 @@ public class Professor {
     private int professorY;
     private float professorSpeed;
     private boolean dead = false;
+    
+    //Khanh added
+    private String grade;
+    String[] grades = {"A+","A","A-","B+","B","B-","C+","C","D+","D","F"};
+    
+
 
     public Rect r = new Rect(0, 0, 0, 0);
 
@@ -18,6 +24,10 @@ public class Professor {
         this.professorX = professorX;
         this.professorY = professorY;
         this.professorSpeed = professorSpeed;
+        
+        //Khanh added
+        Random rd = new Random();
+        this.grade = grades[rd.nextInt(grades.length)];
     }
 
     public void update() {
@@ -45,5 +55,53 @@ public class Professor {
 
     public boolean isDead() {
         return dead;
+    }
+    
+    public String getGrade() {return grade;}
+
+    public int getScore() {
+        if (this.grade.equals("A+")) {
+            return 10;
+        }
+
+        else if (this.grade.equals("A")){
+            return 9;
+        }
+
+        else if (this.grade.equals("A-")){
+            return 8;
+        }
+
+        else if (this.grade.equals("B+")){
+            return 7;
+        }
+
+        else if (this.grade.equals("B")){
+            return 6;
+        }
+
+        else if (this.grade.equals("B-")){
+            return 5;
+        }
+
+        else if (this.grade.equals("C+")){
+            return 4;
+        }
+
+        else if (this.grade.equals("C")){
+            return 3;
+        }
+
+        else if (this.grade.equals("D+")){
+            return -6;
+        }
+
+        else if (this.grade.equals("D")){
+            return -7;
+        }
+
+        else {
+            return -10;
+        }
     }
 }
