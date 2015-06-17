@@ -5,6 +5,8 @@ import android.graphics.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 import capprotectors.framework.Game;
 import capprotectors.framework.Graphics;
@@ -33,6 +35,7 @@ public class GameScreen extends Screen {
     public int screenWidth = g.getWidth();
     public int screenHeight = g.getHeight();
     Paint paint, paint2;
+    Random random = new Random();
 
     public GameScreen(Game game) {
         super(game);
@@ -44,6 +47,9 @@ public class GameScreen extends Screen {
         bg2.setSpeedX(scrollSpeed);
 
         student = new Student(lives, Assets.student.getWidth(), Assets.student.getHeight(), 100, screenHeight/2);
+
+        loadRaw();
+        
         // Defining a paint object
         paint = new Paint();
         paint.setTextSize(30);
@@ -56,6 +62,14 @@ public class GameScreen extends Screen {
         paint2.setTextAlign(Paint.Align.CENTER);
         paint2.setAntiAlias(true);
         paint2.setColor(Color.WHITE);
+    }
+
+    private void loadRaw() {
+        Scanner sc = new Scanner(MainGame.grades);
+        while (sc.hasNext()) {
+            Professor.grades.add(sc.next());
+            Professor.marks.add(sc.nextInt());
+        }
     }
 
     @Override
@@ -133,7 +147,9 @@ public class GameScreen extends Screen {
         student.update();
 
         if (Math.random()<spawnChance)
-            professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(), screenWidth+Assets.professor.getWidth()/2, (int) Math.floor((Math.random()*3+1))*screenHeight/4, scrollSpeed));
+            professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(),
+                    screenWidth+Assets.professor.getWidth()/2, (int) Math.floor((Math.random()*3+1))*screenHeight/4,
+                    scrollSpeed, nextGrade()));
 
         for (int i = professors.size()-1; i>=0; i--) {
             Professor professor = professors.get(i);
@@ -147,6 +163,11 @@ public class GameScreen extends Screen {
 
         bg1.update();
         bg2.update();
+    }
+
+    private int nextGrade() {
+        // a method to generate next grade, dependent on different levels
+        return random.nextInt(Professor.grades.size()); //temporarily a uniform distribution
     }
 
     private boolean inBounds(TouchEvent event, int x, int y, int width, int height) {
