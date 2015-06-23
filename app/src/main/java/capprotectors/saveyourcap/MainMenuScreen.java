@@ -43,7 +43,7 @@ public class MainMenuScreen extends Screen {
     @Override
     public void paint(float deltaTime) {
         Graphics g = game.getGraphics();
-        g.drawScaledImage(Assets.menu, 0, 0, g.getWidth(), g.getHeight(), 0, 0, Assets.menu.getWidth(), Assets.menu.getHeight());
+        g.drawScaledImage(Assets.mainmenu, 0, 0, g.getWidth(), g.getHeight(), 0, 0, Assets.mainmenu.getWidth(), Assets.mainmenu.getHeight());
     }
 
     @Override
