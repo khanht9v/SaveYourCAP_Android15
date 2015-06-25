@@ -13,7 +13,7 @@ public class Student {
     private int studentY;
     private int studentDestY = studentY;
     private float studentSpeed;
-    private int midPoint;
+//    private int midPoint;
 
     public static Rect boundingBox = new Rect(0, 0, 0, 0);
 
@@ -26,16 +26,19 @@ public class Student {
     }
 
     public void update() {
-        if (studentY != studentDestY) {
+        /*if (studentY != studentDestY) {
             if ((studentY < midPoint && midPoint < studentDestY) || (studentY > midPoint && midPoint > studentDestY)) {
                 studentSpeed += Math.signum(studentDestY - studentY)*inertia;
             }
             else {
                 studentSpeed -= Math.signum(studentDestY - studentY)*inertia;
             }
-        }
+        }*/
+        if (studentY != studentDestY)
+            studentSpeed = (studentDestY - studentY)/50; //TODO
 
-        if (Math.abs(studentDestY-studentY)<2*inertia && studentSpeed > 0 && (studentY+studentSpeed > studentDestY) || (studentSpeed < 0 && studentY+studentSpeed < studentDestY)) {
+//        if (Math.abs(studentDestY-studentY)<2*inertia && studentSpeed > 0 && (studentY+studentSpeed > studentDestY) || (studentSpeed < 0 && studentY+studentSpeed < studentDestY)) {
+        if (Math.abs(studentDestY-studentY) < studentSpeed) {
             studentSpeed = 0;
             studentY = studentDestY;
         }
@@ -49,7 +52,7 @@ public class Student {
     public void moveTo(int y) {
         if (y != studentDestY) {
             studentDestY = y;
-            midPoint = (y + studentY) / 2;
+//            midPoint = (y + studentY) / 2;
         }
     }
 
