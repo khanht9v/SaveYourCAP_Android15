@@ -9,6 +9,8 @@ public interface Input {
         public static final int TOUCH_UP = 1;
         public static final int TOUCH_DRAGGED = 2;
         public static final int TOUCH_HOLD = 3;
+        public static final int SWIPE_DOWN = 4;
+        public static final int SWIPE_UP = 5;
 
         public int type;
         public int x, y;

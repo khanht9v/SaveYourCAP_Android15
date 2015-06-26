@@ -2,6 +2,7 @@ package capprotectors.saveyourcap;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +134,7 @@ public class GameScreen extends Screen {
                     student.moveTo(screenHeight/4);
                 }
             }
-
+            Log.i("GameScreen","Touch input ["+i+"]: "+event.type+" "+event.x+","+event.y);
 
         }
 
