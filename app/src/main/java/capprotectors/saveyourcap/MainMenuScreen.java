@@ -3,8 +3,6 @@ package capprotectors.saveyourcap;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
-import com.swarmconnect.Swarm;
-
 import java.util.List;
 
 import capprotectors.framework.Game;
@@ -16,7 +14,6 @@ import capprotectors.implementation.AndroidGame;
 public class MainMenuScreen extends Screen {
     public MainMenuScreen(Game game) {
         super(game);
-        Swarm.init((AndroidGame) game, 17981, "b3efa3ee656161523093b42ecad22ae5");
     }
 
     @Override
@@ -35,7 +32,7 @@ public class MainMenuScreen extends Screen {
 
                 if (inBounds(event, 50, 620, 550, 750-620)) {
                     Assets.click.play(1f);
-                    Swarm.showLogin();
+                    Swarm.init((AndroidGame) game, 17981, "b3efa3ee656161523093b42ecad22ae5");
                 }
 
                 if (inBounds(event,620, 460, 1230-620, 530-460)) {
@@ -44,7 +41,25 @@ public class MainMenuScreen extends Screen {
                 }
 
                 if (inBounds(event, 650, 640, 1230-620, 110 )) {
-                    confirmExit();
+                    AlertDialog.Builder builder = new AlertDialog.Builder((AndroidGame) this.game);
+                    builder.setCancelable(false);
+                    builder.setMessage("Do you want to Exit?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //if user pressed "yes", then he is allowed to exit from application
+                            ((AndroidGame) MainMenuScreen.this.game).finish();
+                        }
+                    });
+                    builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //if user select "No", just cancel this dialog and continue with app
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alert=builder.create();
+                    alert.show();
                 }
 
             }
@@ -69,7 +84,7 @@ public class MainMenuScreen extends Screen {
 
     @Override
     public void resume() {
-        Assets.theme.play();
+
     }
 
     @Override
@@ -80,10 +95,6 @@ public class MainMenuScreen extends Screen {
     @Override
     public void backButton() {
         //Display "Exit Game?" Box
-        confirmExit();
-    }
-
-    public void confirmExit() {
         AlertDialog.Builder builder = new AlertDialog.Builder((AndroidGame) this.game);
         builder.setCancelable(false);
         builder.setMessage("Do you want to Exit?");

@@ -1,12 +1,6 @@
 package capprotectors.saveyourcap;
 
-import android.util.Log;
-
 import com.swarmconnect.Swarm;
-import com.swarmconnect.SwarmActiveUser;
-import com.swarmconnect.SwarmActivity;
-import com.swarmconnect.SwarmMainActivity;
-import com.swarmconnect.delegates.SwarmLoginListener;
 
 import capprotectors.framework.Game;
 import capprotectors.framework.Graphics;
@@ -40,35 +34,7 @@ public class LoadingScreen extends Screen {
 
         Swarm.enableAlternativeMarketCompatability();
         Swarm.setAllowGuests(true);
-
-        SwarmLoginListener mySwarmLoginListener = new SwarmLoginListener() {
-
-            // This method is called when the login process has started
-            // (when a login dialog is displayed to the user).
-            public void loginStarted() {
-                Log.d("login","started");
-            }
-
-            // This method is called if the user cancels the login process.
-            public void loginCanceled() {
-                Log.d("login","canceled");
-            }
-
-            // This method is called when the user has successfully logged in.
-            public void userLoggedIn(SwarmActiveUser user) {
-                Log.d("login","loggedIn");
-                game.setScreen(new SplashLoadingScreen(game));
-//                Swarm.e();
-            }
-
-            // This method is called when the user logs out.
-            public void userLoggedOut() {
-                Log.d("login","loggedOut");
-            }
-
-        };
-
-
+        Swarm.init((AndroidGame) game, 17981, "b3efa3ee656161523093b42ecad22ae5");
 
         game.setScreen(new MainMenuScreen(game));
     }
