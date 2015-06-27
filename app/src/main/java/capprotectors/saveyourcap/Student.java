@@ -1,6 +1,7 @@
 package capprotectors.saveyourcap;
 
 import android.graphics.Rect;
+import android.util.Log;
 
 public class Student {
 
@@ -36,47 +37,30 @@ public class Student {
             }
         }*/
         if (newMove && studentY != studentDestY) {
-            studentSpeed = (studentDestY - studentY) / 50; //TODO
+            studentSpeed = (studentDestY - studentY) / 18; //TODO
             newMove = false;
         }
 
 //        if (Math.abs(studentDestY-studentY)<2*inertia && studentSpeed > 0 && (studentY+studentSpeed > studentDestY) || (studentSpeed < 0 && studentY+studentSpeed < studentDestY)) {
-        if (Math.abs(studentDestY-studentY) < studentSpeed) {
+        if (Math.abs(studentDestY-studentY) < Math.abs(studentSpeed)) {
             studentSpeed = 0;
             studentY = studentDestY;
         }
         else {
             studentY += studentSpeed;
         }
-
+        if (studentSpeed!=0) Log.d("Student#moveTo","from "+studentY+" to "+studentDestY+" at "+studentSpeed);
         boundingBox.set(studentX-studentWidth/2, studentY-studentHeight/2, studentX+studentWidth/2, studentY+studentHeight/2);
     }
 
     public void moveTo(int y) {
         int dest = GameScreen.screenHeight*y/4;
-        if (y != studentDestY) {
+        if (dest != studentDestY) {
             studentDestY = dest;
             newMove = true;
 //            midPoint = (y + studentY) / 2;
         }
-    }
-
-    public void moveUp() {
-        if (studentDestY > GameScreen.screenHeight*3/8) { // make up for inaccuracies due to integer division
-            studentDestY -= GameScreen.screenHeight / 4;
-            newMove = true;
-        }
-        else if (studentDestY < GameScreen.screenHeight/4)
-            studentDestY = GameScreen.screenHeight/4;
-    }
-
-    public void moveDown() {
-        if (studentDestY < GameScreen.screenHeight*5/8) {
-            studentDestY += GameScreen.screenHeight / 4;
-            newMove = true;
-        }
-        else if (studentDestY > GameScreen.screenHeight*3/4)
-            studentDestY = GameScreen.screenHeight*3/4;
+        Log.d("Student#moveTo",y+" "+dest+" "+studentDestY);
     }
 
     public void lostALife(){
