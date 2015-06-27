@@ -2,11 +2,9 @@ package capprotectors.saveyourcap;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import capprotectors.framework.Game;
@@ -15,33 +13,42 @@ import capprotectors.framework.Input.TouchEvent;
 import capprotectors.framework.Screen;
 
 public class GameScreen extends Screen {
+
+
     enum GameState {
         Ready, Running, Paused, GameOver
     }
-
     GameState state = GameState.Ready;
 
     // Variable Setup
-    // You would create game objects here.
 
     private static Background bg1, bg2;
+
     private static Student student;
     public static ArrayList<Professor> professors = new ArrayList<>();
-
     int lives = 3;
 
     private static int score = 0;
 
+    // You would create game objects here.
+
     private float spawnChance = 0.02f;
+    private float spawnChanceIncRate = 0.0021f;
+    private float[] biggerGradeChance;
+    private float gradeChanceChange = 0.975f;
     private int scrollSpeed = -9;
     Graphics g = game.getGraphics();
 
-    public int screenWidth = g.getWidth();
-    public int screenHeight = g.getHeight();
+    public static int screenWidth;
+    public static int screenHeight;
     Paint paint, paint2;
-    Random random = new Random();
+
     public GameScreen(Game game) {
+
         super(game);
+
+        screenWidth = g.getWidth();
+        screenHeight = g.getHeight();
 
         // Initialize game objects here
         bg1 = new Background(0, 0);
@@ -52,6 +59,11 @@ public class GameScreen extends Screen {
         student = new Student(lives, Assets.student.getWidth(), Assets.student.getHeight(), 100, screenHeight/2);
 
         loadRaw();
+
+        biggerGradeChance = new float[Professor.grades.size()];
+        for (int i = 0; i<biggerGradeChance.length-1; i++)
+            biggerGradeChance[i] = (float) Math.sqrt(1/(biggerGradeChance.length-i)); //higher chance for bigger grades at first;
+        biggerGradeChance[biggerGradeChance.length-1] = 0;
 
         // Defining a paint object
         paint = new Paint();
@@ -86,11 +98,11 @@ public class GameScreen extends Screen {
 
         if (state == GameState.Ready)
             updateReady(touchEvents);
-        if (state == GameState.Running)
+        else if (state == GameState.Running)
             updateRunning(touchEvents, deltaTime);
-        if (state == GameState.Paused)
+        else if (state == GameState.Paused)
             updatePaused(touchEvents);
-        if (state == GameState.GameOver)
+        else if (state == GameState.GameOver)
             updateGameOver(touchEvents);
     }
 
@@ -123,18 +135,23 @@ public class GameScreen extends Screen {
                     pause();
                 }
                 if (event.y > screenHeight*3/4) {
-                    student.moveTo(screenHeight * 3 / 4);
+                    student.moveTo(3);
                 }
 
                 else if (event.y > screenHeight/2) {
-                    student.moveTo(screenHeight / 2);
+                    student.moveTo(2);
                 }
 
                 else if (event.y > screenHeight/4){
-                    student.moveTo(screenHeight/4);
+                    student.moveTo(1);
                 }
             }
-            Log.i("GameScreen","Touch input ["+i+"]: "+event.type+" "+event.x+","+event.y);
+            else if (event.type == TouchEvent.SWIPE_UP) {
+                student.moveUp();
+            }
+            else if (event.type == TouchEvent.SWIPE_DOWN) {
+                student.moveDown();
+            }
 
         }
 
@@ -148,6 +165,8 @@ public class GameScreen extends Screen {
         // 3. Call individual update() methods here.
         // This is where all the game updates happen.
         student.update();
+
+        changeDifficulty();
 
         if (Math.random()<spawnChance)
             professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(),
@@ -168,9 +187,23 @@ public class GameScreen extends Screen {
         bg2.update();
     }
 
+    private void changeDifficulty() {
+        spawnChance += spawnChanceIncRate;
+        spawnChanceIncRate -= spawnChance/200;
+
+        gradeChanceChange *= gradeChanceChange;
+
+        scrollSpeed = -9-score/50;
+        bg1.setSpeedX(scrollSpeed);
+        bg2.setSpeedX(scrollSpeed);
+    }
+
     private int nextGrade() {
-        // a method to generate next grade, dependent on different levels
-        return random.nextInt(Professor.grades.size()); //temporarily a uniform distribution
+        // a method to generate next grade
+        int next = 0;
+        while (Math.random() < biggerGradeChance[next]*gradeChanceChange)
+            next++;
+        return next;
     }
 
     private boolean inBounds(TouchEvent event, int x, int y, int width, int height) {

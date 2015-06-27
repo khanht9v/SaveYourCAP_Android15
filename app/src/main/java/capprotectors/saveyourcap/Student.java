@@ -13,6 +13,7 @@ public class Student {
     private int studentY;
     private int studentDestY = studentY;
     private float studentSpeed;
+    private boolean newMove = false;
 //    private int midPoint;
 
     public static Rect boundingBox = new Rect(0, 0, 0, 0);
@@ -34,8 +35,10 @@ public class Student {
                 studentSpeed -= Math.signum(studentDestY - studentY)*inertia;
             }
         }*/
-        if (studentY != studentDestY)
-            studentSpeed = (studentDestY - studentY)/50; //TODO
+        if (newMove && studentY != studentDestY) {
+            studentSpeed = (studentDestY - studentY) / 50; //TODO
+            newMove = false;
+        }
 
 //        if (Math.abs(studentDestY-studentY)<2*inertia && studentSpeed > 0 && (studentY+studentSpeed > studentDestY) || (studentSpeed < 0 && studentY+studentSpeed < studentDestY)) {
         if (Math.abs(studentDestY-studentY) < studentSpeed) {
@@ -50,10 +53,30 @@ public class Student {
     }
 
     public void moveTo(int y) {
+        int dest = GameScreen.screenHeight*y/4;
         if (y != studentDestY) {
-            studentDestY = y;
+            studentDestY = dest;
+            newMove = true;
 //            midPoint = (y + studentY) / 2;
         }
+    }
+
+    public void moveUp() {
+        if (studentDestY > GameScreen.screenHeight*3/8) { // make up for inaccuracies due to integer division
+            studentDestY -= GameScreen.screenHeight / 4;
+            newMove = true;
+        }
+        else if (studentDestY < GameScreen.screenHeight/4)
+            studentDestY = GameScreen.screenHeight/4;
+    }
+
+    public void moveDown() {
+        if (studentDestY < GameScreen.screenHeight*5/8) {
+            studentDestY += GameScreen.screenHeight / 4;
+            newMove = true;
+        }
+        else if (studentDestY > GameScreen.screenHeight*3/4)
+            studentDestY = GameScreen.screenHeight*3/4;
     }
 
     public void lostALife(){
