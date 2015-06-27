@@ -49,7 +49,6 @@ public class Student {
         else {
             studentY += studentSpeed;
         }
-        if (studentSpeed!=0) Log.d("Student#moveTo","from "+studentY+" to "+studentDestY+" at "+studentSpeed);
         boundingBox.set(studentX-studentWidth/2, studentY-studentHeight/2, studentX+studentWidth/2, studentY+studentHeight/2);
     }
 
@@ -60,7 +59,6 @@ public class Student {
             newMove = true;
 //            midPoint = (y + studentY) / 2;
         }
-        Log.d("Student#moveTo",y+" "+dest+" "+studentDestY);
     }
 
     public void lostALife(){

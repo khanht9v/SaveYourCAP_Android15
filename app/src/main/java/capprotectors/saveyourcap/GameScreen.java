@@ -2,6 +2,7 @@ package capprotectors.saveyourcap;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class GameScreen extends Screen {
     private float spawnChanceIncRate = 0.0021f;
     private float[] biggerGradeChance;
     private float gradeChanceChange = 0.975f;
+    private int difficulty = 0;
     private int scrollSpeed = -9;
     Graphics g = game.getGraphics();
 
@@ -62,8 +64,10 @@ public class GameScreen extends Screen {
 
         biggerGradeChance = new float[Professor.grades.size()];
         for (int i = 0; i<biggerGradeChance.length-1; i++)
-            biggerGradeChance[i] = (float) Math.sqrt(1/(biggerGradeChance.length-i)); //higher chance for bigger grades at first;
+            biggerGradeChance[i] = (float) Math.sqrt(1f/(biggerGradeChance.length-i)); //higher chance for bigger grades at first;
         biggerGradeChance[biggerGradeChance.length-1] = 0;
+        for (int i = 0; i<biggerGradeChance.length; i++)
+            Log.i("Grades", i+" "+biggerGradeChance[i]);
 
         // Defining a paint object
         paint = new Paint();
@@ -166,7 +170,9 @@ public class GameScreen extends Screen {
         // This is where all the game updates happen.
         student.update();
 
-        changeDifficulty();
+        while (score - difficulty > 50) {
+            increaseDifficulty();
+        }
 
         if (Math.random()<spawnChance)
             professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(),
@@ -187,11 +193,14 @@ public class GameScreen extends Screen {
         bg2.update();
     }
 
-    private void changeDifficulty() {
+    private void increaseDifficulty() {
+        difficulty+=50;
+
         spawnChance += spawnChanceIncRate;
         spawnChanceIncRate -= spawnChance/200;
+        spawnChanceIncRate = spawnChanceIncRate>0?spawnChanceIncRate:0;
 
-        gradeChanceChange *= gradeChanceChange;
+        gradeChanceChange *= 0.975f;
 
         scrollSpeed = -9-score/50;
         bg1.setSpeedX(scrollSpeed);
@@ -201,6 +210,7 @@ public class GameScreen extends Screen {
     private int nextGrade() {
         // a method to generate next grade
         int next = 0;
+        Log.i("ASAS",""+biggerGradeChance[next]*gradeChanceChange);
         while (Math.random() < biggerGradeChance[next]*gradeChanceChange)
             next++;
         return next;
@@ -260,13 +270,13 @@ public class GameScreen extends Screen {
         g.drawImage(Assets.student, student.getX()-student.getWidth()/2, student.getY()-student.getHeight()/2);
         for (Professor professor : professors) {
             g.drawImage(Assets.professor, professor.getX(), professor.getY());
-            g.drawString(professor.getGrade(), professor.getX(), professor.getY(), paint);
+            g.drawString(professor.getGrade(), professor.getX(), professor.getY(), paint2);
         }
 
         String hearts = "";
         for (int i=0; i<student.getLives(); i++) hearts+="?";
-        g.drawString(hearts, 100, 100, paint);
-        g.drawString(score+"", screenWidth - 200, 100, paint);
+        g.drawString(hearts, 100, 100, paint2);
+        g.drawString(score+"", screenWidth - 200, 100, paint2);
 
         // Secondly, draw the UI above the game elements.
         if (state == GameState.Ready)
