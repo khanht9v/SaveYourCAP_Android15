@@ -65,4 +65,10 @@ public class MainGame extends AndroidGame {
         super.onPause();
         Assets.theme.pause();
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        Assets.theme.stop();
+    }
 }
