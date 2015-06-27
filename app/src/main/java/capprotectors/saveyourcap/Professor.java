@@ -1,6 +1,7 @@
 package capprotectors.saveyourcap;
 
 import android.graphics.Rect;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -35,11 +36,11 @@ public class Professor {
         professorX += professorSpeed;
         r.set(professorX-professorWidth/2, professorY-professorHeight/2, professorX+professorWidth/2, professorY+professorHeight/2);
         if (r.intersect(Student.boundingBox)){
-            if (this.grade == "F") //TODO move condition to raw
+            if (this.grade.equals("F")) //TODO move condition to raw
                 GameScreen.getStudent().lostALife();
             GameScreen.addScore(this.getScore());
             die();
-        } else if (r.intersect(0, 0, 0, 800)) { // TODO: replace 800 with screenHeight
+        } else if (r.intersect(-this.professorWidth, 200, -this.professorWidth, 800)) { // TODO: replace 800 with screenHeight
             die();
         }
     }
@@ -54,6 +55,14 @@ public class Professor {
 
     public int getY() {
         return professorY;
+    }
+
+    public int getProfessorWidth() {
+        return professorWidth;
+    }
+
+    public int getProfessorHeight() {
+        return professorHeight;
     }
 
     public boolean isDead() {
