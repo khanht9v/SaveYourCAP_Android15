@@ -129,30 +129,30 @@ public class GameScreen extends Screen {
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
 
-            if (event.type == TouchEvent.TOUCH_UP) {
-
-                if (event.x > screenWidth-100 && event.y < 100) {
-                    pause();
-                }
-                if (event.y > screenHeight*3/4) {
-                    student.moveTo(3);
-                }
-
-                else if (event.y > screenHeight/2) {
+            if (event.type == TouchEvent.SWIPE_UP) {
+                if (student.getY() > screenHeight/2)
                     student.moveTo(2);
-                }
-
-                else if (event.y > screenHeight/4){
+                else if (student.getY() > screenHeight/4)
                     student.moveTo(1);
-                }
-            }
-            else if (event.type == TouchEvent.SWIPE_UP) {
-                student.moveUp();
+                break;
             }
             else if (event.type == TouchEvent.SWIPE_DOWN) {
-                student.moveDown();
+                if (student.getY() < screenHeight/2)
+                    student.moveTo(2);
+                else if (student.getY() < screenHeight*3/4)
+                    student.moveTo(3);
+                break;
             }
-
+            else if (event.type == TouchEvent.TOUCH_UP) {
+                if (event.x > screenWidth-100 && event.y < 100)
+                    pause();
+                if (event.y > screenHeight*3/4)
+                    student.moveTo(3);
+                else if (event.y > screenHeight/2)
+                    student.moveTo(2);
+                else if (event.y > screenHeight/4)
+                    student.moveTo(1);
+            }
         }
 
         // 2. Check miscellaneous events like death:
