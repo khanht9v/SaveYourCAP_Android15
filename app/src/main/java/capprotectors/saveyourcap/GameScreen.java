@@ -4,6 +4,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.swarmconnect.Swarm;
+import com.swarmconnect.SwarmLeaderboard;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -43,7 +46,7 @@ public class GameScreen extends Screen {
 
     public static int screenWidth;
     public static int screenHeight;
-    Paint paint, paint2;
+    Paint paint, paint2, redBigPaint, greenMedPaint;
 
     public GameScreen(Game game) {
 
@@ -64,10 +67,10 @@ public class GameScreen extends Screen {
 
         biggerGradeChance = new float[Professor.grades.size()];
         for (int i = 0; i<biggerGradeChance.length-1; i++)
-            biggerGradeChance[i] = (float) Math.sqrt(1f/(biggerGradeChance.length-i)); //higher chance for bigger grades at first;
+            biggerGradeChance[i] = (float) Math.sqrt(1-1f/(biggerGradeChance.length-i)); //higher chance for bigger grades at first;
         biggerGradeChance[biggerGradeChance.length-1] = 0;
         for (int i = 0; i<biggerGradeChance.length; i++)
-            Log.i("Grades", i+" "+biggerGradeChance[i]);
+            Log.i("Grades up chance from ", i+": "+biggerGradeChance[i]);
 
         // Defining a paint object
         paint = new Paint();
@@ -81,6 +84,19 @@ public class GameScreen extends Screen {
         paint2.setTextAlign(Paint.Align.CENTER);
         paint2.setAntiAlias(true);
         paint2.setColor(Color.WHITE);
+
+        redBigPaint = new Paint();
+        redBigPaint.setTextSize(90);
+        redBigPaint.setTextAlign(Paint.Align.LEFT);
+        redBigPaint.setTextScaleX(.8f);
+        redBigPaint.setAntiAlias(true);
+        redBigPaint.setColor(Color.RED);
+
+        greenMedPaint = new Paint();
+        greenMedPaint.setTextSize(75);
+        greenMedPaint.setTextAlign(Paint.Align.CENTER);
+        greenMedPaint.setAntiAlias(true);
+        greenMedPaint.setColor(Color.GREEN);
     }
 
     private void loadRaw() {
@@ -210,7 +226,6 @@ public class GameScreen extends Screen {
     private int nextGrade() {
         // a method to generate next grade
         int next = 0;
-        Log.i("ASAS",""+biggerGradeChance[next]*gradeChanceChange);
         while (Math.random() < biggerGradeChance[next]*gradeChanceChange)
             next++;
         return next;
@@ -244,11 +259,15 @@ public class GameScreen extends Screen {
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
-                if (inBounds(event, 0, 0, 800, 480)) {
+                if (inBounds(event, 0, 0, 1280, 400)) {
                     Assets.click.play(.85f);
                     nullify();
                     game.setScreen(new MainMenuScreen(game));
                     return;
+                }
+                if (inBounds(event, 0, 400, 1280, 400)) {
+                    Assets.click.play(.85f);
+                    SwarmLeaderboard.submitScoreAndShowLeaderboard(19727, score);
                 }
             }
         }
@@ -269,14 +288,15 @@ public class GameScreen extends Screen {
 
         g.drawImage(Assets.student, student.getX()-student.getWidth()/2, student.getY()-student.getHeight()/2);
         for (Professor professor : professors) {
-            g.drawImage(Assets.professor, professor.getX(), professor.getY());
-            g.drawString(professor.getGrade(), professor.getX(), professor.getY(), paint2);
+            g.drawImage(Assets.professor, professor.getX()-professor.getProfessorWidth()/2, professor.getY()-professor.getProfessorHeight()/2);
+            g.drawString(professor.getGrade(), professor.getX(), professor.getY(), greenMedPaint);
         }
 
         String hearts = "";
-        for (int i=0; i<student.getLives(); i++) hearts+="?";
-        g.drawString(hearts, 100, 100, paint2);
+        for (int i=0; i<student.getLives(); i++) hearts+="♥";
+        g.drawString(hearts, 50, 100, redBigPaint);
         g.drawString(score+"", screenWidth - 200, 100, paint2);
+        g.drawString("FPS:"+((int) (100/deltaTime)), 60, screenHeight-25, paint); //TODO option to show/hide in setting
 
         // Secondly, draw the UI above the game elements.
         if (state == GameState.Ready)
@@ -328,8 +348,9 @@ public class GameScreen extends Screen {
     private void drawGameOverUI() {
         Graphics g = game.getGraphics();
         g.drawRect(0, 0, 1281, 801, Color.BLACK);
-        g.drawString("GAME OVER.", 400, 240, paint2);
-        g.drawString("Tap to return.", 400, 290, paint);
+        g.drawString("GAME OVER.", 640, 400, paint2);
+        g.drawString("Tap to return", 640, 290, paint);
+        g.drawString("Submit score?", 640, 460, paint);
     }
 
     @Override
