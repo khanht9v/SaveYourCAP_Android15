@@ -24,10 +24,42 @@ public class MainMenuScreen extends Screen {
         for (TouchEvent event: touchEvents) {
             if (event.type == TouchEvent.TOUCH_UP) {
 
-                if (inBounds(event, 16, g.getHeight()-149, 319-16, 149-15)) {
+                if (inBounds(event, 50, 300, 550, 300)) {
                     //START GAME
                     Assets.click.play(1f);
                     game.setScreen(new GameScreen(game));
+                }
+
+                if (inBounds(event, 50, 620, 550, 750-620)) {
+                    Assets.click.play(1f);
+                    Swarm.init((AndroidGame) game, 17981, "b3efa3ee656161523093b42ecad22ae5");
+                }
+
+                if (inBounds(event,620, 460, 1230-620, 530-460)) {
+                    Assets.click.play(1f);
+                    Swarm.showLeaderboards();
+                }
+
+                if (inBounds(event, 650, 640, 1230-620, 110 )) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder((AndroidGame) this.game);
+                    builder.setCancelable(false);
+                    builder.setMessage("Do you want to Exit?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //if user pressed "yes", then he is allowed to exit from application
+                            ((AndroidGame) MainMenuScreen.this.game).finish();
+                        }
+                    });
+                    builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //if user select "No", just cancel this dialog and continue with app
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alert=builder.create();
+                    alert.show();
                 }
 
             }
