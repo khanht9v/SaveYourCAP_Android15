@@ -2,6 +2,8 @@ package capprotectors.saveyourcap;
 
 import android.util.Log;
 
+import com.swarmconnect.Swarm;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +15,7 @@ import capprotectors.implementation.AndroidGame;
 public class MainGame extends AndroidGame {
     public static String grades;
     boolean firstTimeCreate = true;
+    boolean gameOn = false;
 
     @Override
     public Screen getInitScreen() {
@@ -23,7 +26,9 @@ public class MainGame extends AndroidGame {
 
         InputStream is = getResources().openRawResource(R.raw.grades);
         grades = convertStreamToString(is);
+        Swarm.preload(this, 17981, "b3efa3ee656161523093b42ecad22ae5");
 
+        gameOn = true;
         return new SplashLoadingScreen(this);
     }
 
@@ -57,7 +62,8 @@ public class MainGame extends AndroidGame {
     @Override
     public void onResume() {
         super.onResume();
-        Assets.theme.play();
+        if (gameOn)
+            Assets.theme.play();
     }
 
     @Override
