@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.swarmconnect.Swarm;
 import com.swarmconnect.SwarmActiveUser;
-import com.swarmconnect.SwarmActivity;
-import com.swarmconnect.SwarmMainActivity;
 import com.swarmconnect.delegates.SwarmLoginListener;
 
 import capprotectors.framework.Game;
@@ -15,12 +13,13 @@ import capprotectors.framework.Screen;
 import capprotectors.implementation.AndroidGame;
 
 public class LoadingScreen extends Screen {
-    public LoadingScreen(Game game) {
-        super(game);
-    }
+    private boolean ready = true;
+    private boolean logging = Swarm.isInitialized();
+    private int delay = 2408/2/10;
+    private SwarmLoginListener swarmLoginListener;
 
-    @Override
-    public void update(float deltaTime) {
+    public LoadingScreen(final Game game) {
+        super(game);
         Graphics g = game.getGraphics();
 
         Assets.mainmenu = g.newImage("mainmenu.png", ImageFormat.RGB565);
@@ -32,45 +31,48 @@ public class LoadingScreen extends Screen {
         Assets.click = game.getAudio().createSound("click.ogg");
 
         game.getAudio().createSound("fuse.ogg").play(1f);
-        try {
-            Thread.sleep(2408/2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         Swarm.enableAlternativeMarketCompatability();
         Swarm.setAllowGuests(true);
 
-        SwarmLoginListener mySwarmLoginListener = new SwarmLoginListener() {
+        swarmLoginListener = new SwarmLoginListener() {
 
             // This method is called when the login process has started
             // (when a login dialog is displayed to the user).
             public void loginStarted() {
                 Log.d("login","started");
             }
-
             // This method is called if the user cancels the login process.
             public void loginCanceled() {
                 Log.d("login","canceled");
             }
-
             // This method is called when the user has successfully logged in.
             public void userLoggedIn(SwarmActiveUser user) {
                 Log.d("login","loggedIn");
-                game.setScreen(new SplashLoadingScreen(game));
+                ready = true;
 //                Swarm.e();
             }
-
             // This method is called when the user logs out.
             public void userLoggedOut() {
                 Log.d("login","loggedOut");
             }
-
         };
 
+    }
 
+    @Override
+    public void update(float deltaTime) {
+        if (delay>-500) {
+            delay -= deltaTime;
+        }
 
-        game.setScreen(new MainMenuScreen(game));
+        if (!logging) {
+            Swarm.init((AndroidGame) game, 17981, "b3efa3ee656161523093b42ecad22ae5", swarmLoginListener);
+            logging = true;
+            ready = false;
+        }
+        if (ready && delay<=0 || delay<-499)
+            game.setScreen(new MainMenuScreen(game));
     }
 
     @Override
