@@ -4,6 +4,8 @@ import android.graphics.Rect;
 
 public class Student {
 
+    final float inertia = (float) 3;
+
     private int lives;
     private int studentWidth;
     private int studentHeight;
@@ -12,6 +14,10 @@ public class Student {
     private int studentDestY = studentY;
     private float studentSpeed;
     private boolean newMove = false;
+//    private int midPoint;
+
+    //public static ArrayList<Item> items = new ArrayList<>();
+    private int numberSU;
 
     public static Rect boundingBox = new Rect(0, 0, 0, 0);
 
@@ -24,11 +30,20 @@ public class Student {
     }
 
     public void update() {
+        /*if (studentY != studentDestY) {
+            if ((studentY < midPoint && midPoint < studentDestY) || (studentY > midPoint && midPoint > studentDestY)) {
+                studentSpeed += Math.signum(studentDestY - studentY)*inertia;
+            }
+            else {
+                studentSpeed -= Math.signum(studentDestY - studentY)*inertia;
+            }
+        }*/
         if (newMove && studentY != studentDestY) {
             studentSpeed = (studentDestY - studentY) / 18; //TODO
             newMove = false;
         }
 
+//        if (Math.abs(studentDestY-studentY)<2*inertia && studentSpeed > 0 && (studentY+studentSpeed > studentDestY) || (studentSpeed < 0 && studentY+studentSpeed < studentDestY)) {
         if (Math.abs(studentDestY-studentY) < Math.abs(studentSpeed)) {
             studentSpeed = 0;
             studentY = studentDestY;
@@ -44,12 +59,19 @@ public class Student {
         if (dest != studentDestY) {
             studentDestY = dest;
             newMove = true;
+//            midPoint = (y + studentY) / 2;
         }
     }
 
     public void lostALife(){
-        lives -= 1;
+        if (numberSU > 0) {numberSU -=1;}
+        else {
+            lives -= 1;
+        }
+
     }
+
+    public void increaseNumberSU() {numberSU +=1;}
 
     public int getLives() {
         return lives;
@@ -70,4 +92,9 @@ public class Student {
     public int getHeight() {
         return studentHeight;
     }
+
+    public int getNumberSU() {return numberSU;}
+
+
 }
+
