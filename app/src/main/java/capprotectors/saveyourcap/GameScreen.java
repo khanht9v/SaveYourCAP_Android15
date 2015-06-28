@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.swarmconnect.Swarm;
 import com.swarmconnect.SwarmLeaderboard;
 
 import java.util.ArrayList;
@@ -26,13 +25,13 @@ public class GameScreen extends Screen {
 
     // Variable Setup
 
-    private static Background bg1, bg2;
+    private Background bg1, bg2;
 
-    private static Student student;
-    public static ArrayList<Professor> professors = new ArrayList<>();
+    private Student student;
+    public ArrayList<Professor> professors = new ArrayList<>();
     int lives = 3;
 
-    private static int score = 0;
+    private int score = 0;
 
     // You would create game objects here.
 
@@ -191,7 +190,7 @@ public class GameScreen extends Screen {
         }
 
         if (Math.random()<spawnChance)
-            professors.add(new Professor(Assets.professor.getWidth(), Assets.professor.getHeight(),
+            professors.add(new Professor(this, Assets.professor.getWidth(), Assets.professor.getHeight(),
                     screenWidth+Assets.professor.getWidth()/2, (int) Math.floor((Math.random()*3+1))*screenHeight/4,
                     scrollSpeed, nextGrade()));
 
@@ -333,7 +332,7 @@ public class GameScreen extends Screen {
     }
 
     private void drawRunningUI() {
-        Graphics g = game.getGraphics();
+        //Graphics g = game.getGraphics();
 
     }
 
@@ -380,19 +379,19 @@ public class GameScreen extends Screen {
         game.setScreen(new MainMenuScreen(game));
     }
 
-    public static Background getBg1() {
+    public Background getBg1() {
         return bg1;
     }
 
-    public static Background getBg2() {
+    public Background getBg2() {
         return bg2;
     }
 
-    public static Student getStudent() {
+    public Student getStudent() {
         return student;
     }
 
-    public static void addScore(int dScore) {
+    public void addScore(int dScore) {
         score += dScore;
     }
 }
