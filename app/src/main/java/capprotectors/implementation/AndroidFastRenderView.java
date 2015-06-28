@@ -41,9 +41,9 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
             float deltaTime = (System.nanoTime() - startTime) / 10000000.000f;
             startTime = System.nanoTime();
 
-            if (deltaTime > 3.15){ // safe cap to prevent major glitch during frame drops
+            /*if (deltaTime > 3.15){ // safe cap to prevent major glitch during frame drops
                 deltaTime = (float) 3.15;
-            }
+            }*/
 
             game.getCurrentScreen().update(deltaTime);
             game.getCurrentScreen().paint(deltaTime);
